@@ -1800,23 +1800,15 @@ const Spreadsheet: React.FC<Props> = ({ data, onHeaderChange, onAddColumns, onIn
     }
   }, [gridData, data.columns, history.length]);
 
-  // Calculate column widths to fill the container after mount
+  // Initialize column widths for new columns only (don't auto-resize existing columns)
   useEffect(() => {
-    if (tableRef.current && data.columns.length > 0) {
-      const container = tableRef.current.closest('.overflow-x-auto');
-      if (container) {
-        const containerWidth = container.clientWidth;
-        const rowNumberColumnWidth = 48; // Width of row numbers column
-        const availableWidth = containerWidth - rowNumberColumnWidth;
-        const columnCount = data.columns.length;
-        
-        if (availableWidth > 0 && columnCount > 0) {
-          const baseWidth = Math.max(100, Math.floor(availableWidth / columnCount));
-          setColumnWidths(Array(columnCount).fill(baseWidth));
-        }
-      }
+    if (data.columns.length > columnWidths.length) {
+      // Only add new column widths, don't resize existing ones
+      const newColumnsCount = data.columns.length - columnWidths.length;
+      const newWidths = Array(newColumnsCount).fill(150); // Default 150px width
+      setColumnWidths([...columnWidths, ...newWidths]);
     }
-  }, [data.columns.length]);
+  }, [data.columns.length, columnWidths.length]);
 
   const isInRange = useCallback((row: number, col: number): boolean => {
     const cellKey = `${row},${col}`;
@@ -1844,15 +1836,16 @@ const Spreadsheet: React.FC<Props> = ({ data, onHeaderChange, onAddColumns, onIn
     return cell.value;
   }, []);
 
-  const getCellStyle = useCallback((cell: CellData) => {
+  const getCellStyle = useCallback((cell: CellData, colIndex?: number) => {
     const format = cell.format || {};
     return {
       fontWeight: format.bold ? 'bold' : 'normal',
       fontStyle: format.italic ? 'italic' : 'normal',
       textAlign: format.alignment || 'left' as const,
-      backgroundColor: format.backgroundColor || 'transparent'
+      backgroundColor: format.backgroundColor || 'transparent',
+      width: colIndex !== undefined ? columnWidths[colIndex] : undefined
     };
-  }, []);
+  }, [columnWidths]);
 
   // Convert column index to letter (A, B, C, ..., Z, AA, AB, etc.)
   // ============================================================================
@@ -2292,6 +2285,7 @@ const Spreadsheet: React.FC<Props> = ({ data, onHeaderChange, onAddColumns, onIn
             className="border-collapse border-2 border-gray-400 select-none"
             style={{ 
               minWidth: Math.max(800, columnWidths.reduce((sum, width) => sum + width, 0) + 50),
+              tableLayout: 'fixed',
               userSelect: 'none'
             }}
           >
@@ -2409,6 +2403,9 @@ const Spreadsheet: React.FC<Props> = ({ data, onHeaderChange, onAddColumns, onIn
                         isEditing && 'bg-white',
                         resizingColumn === colIndex && 'border-r-blue-500'
                       )}
+                      style={{ 
+                        width: columnWidths[colIndex] 
+                      }}
                       onClick={(e) => handleCellClick(-1, colIndex, e)}
                       onMouseDown={(e) => handleCellMouseDown(-1, colIndex, e)}
                       onMouseEnter={() => handleCellMouseEnter(-1, colIndex)}
@@ -2512,7 +2509,7 @@ const Spreadsheet: React.FC<Props> = ({ data, onHeaderChange, onAddColumns, onIn
                             resizingRow === actualRowIndex && 'bg-gray-100',
                             resizingColumn === colIndex && 'border-r-blue-500'
                           )}
-                          style={getCellStyle(cell)}
+                          style={getCellStyle(cell, colIndex)}
                           onClick={(e) => handleCellClick(actualRowIndex, colIndex, e)}
                           onMouseDown={(e) => handleCellMouseDown(actualRowIndex, colIndex, e)}
                           onMouseEnter={() => handleCellMouseEnter(actualRowIndex, colIndex)}
