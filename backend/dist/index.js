@@ -203,6 +203,18 @@ const app = (0, express_1.default)();
 app.use((0, cors_1.default)(CORS_OPTIONS));
 app.use(express_1.default.json());
 app.use(requestLogger);
+// Additional CORS headers as fallback
+app.use((req, res, next) => {
+    res.header('Access-Control-Allow-Origin', '*');
+    res.header('Access-Control-Allow-Methods', 'GET,PUT,POST,DELETE,OPTIONS');
+    res.header('Access-Control-Allow-Headers', 'Content-Type, Authorization, Content-Length, X-Requested-With');
+    if (req.method === 'OPTIONS') {
+        res.sendStatus(200);
+    }
+    else {
+        next();
+    }
+});
 // Define routes
 app.get('/health', healthCheck);
 app.get('/api/data', getData);
