@@ -10,19 +10,7 @@ const PORT = process.env.PORT || 4000;
 
 /** CORS configuration for cross-origin requests */
 const CORS_OPTIONS = {
-  origin: process.env.NODE_ENV === 'production' 
-    ? (origin: string | undefined, callback: (err: Error | null, allow?: boolean) => void) => {
-        // Allow any Vercel domain or specific domains
-        if (!origin || 
-            origin.includes('vercel.app') || 
-            origin.includes('localhost') ||
-            origin === 'https://keye-takehome-frontend.vercel.app') {
-          callback(null, true);
-        } else {
-          callback(new Error('Not allowed by CORS'));
-        }
-      }
-    : ['http://localhost:3000', 'http://localhost:3001', 'http://127.0.0.1:3000'],
+  origin: true, // Allow all origins for now - can be restricted later
   credentials: true
 };
 
