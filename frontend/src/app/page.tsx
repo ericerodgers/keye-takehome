@@ -83,6 +83,7 @@ export default function Home() {
     const fetchData = async () => {
       try {
         setLoading(true);
+        console.log('Fetching from API URL:', API_URL + '/api/data');
         const response = await fetch(API_URL + '/api/data');
         if (!response.ok) {
           throw new Error(`HTTP error! status: ${response.status}`);
