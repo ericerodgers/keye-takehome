@@ -1,0 +1,211 @@
+"use strict";
+var __importDefault = (this && this.__importDefault) || function (mod) {
+    return (mod && mod.__esModule) ? mod : { "default": mod };
+};
+Object.defineProperty(exports, "__esModule", { value: true });
+const express_1 = __importDefault(require("express"));
+const cors_1 = __importDefault(require("cors"));
+// ============================================================================
+// CONFIGURATION
+// ============================================================================
+const PORT = process.env.PORT || 4000;
+const CORS_OPTIONS = {
+    origin: process.env.NODE_ENV === 'production'
+        ? ['https://yourdomain.com'] // Replace with actual domain in production
+        : ['http://localhost:3000', 'http://127.0.0.1:3000'],
+    credentials: true
+};
+// ============================================================================
+// DATA MODULE
+// ============================================================================
+/**
+ * Sample financial data for the spreadsheet application
+ * Contains product portfolio revenue data across multiple years
+ */
+const getFinancialData = () => ({
+    Values: {
+        columns: [
+            { name: 'Product', key: 'product' },
+            { name: '2020', key: '2020' },
+            { name: '2021', key: '2021' },
+            { name: '2022', key: '2022' },
+            { name: '2023', key: '2023' }
+        ],
+        items: [
+            {
+                "2020": 5118724.62743667,
+                "2021": 2630672.1336451983,
+                "2022": 4900641.343221119,
+                "2023": 3051708.3179565365,
+                "product": "Insight Advisory"
+            },
+            {
+                "2020": 10053102.32082951,
+                "2021": 20638163.620427437,
+                "2022": 20133558.987846997,
+                "2023": 20576136.452683046,
+                "product": "OperateX Staffing"
+            },
+            {
+                "2020": 0,
+                "2021": 0,
+                "2022": 678556.9921597196,
+                "2023": 506001.15826520027,
+                "product": "CoreSoft Suite"
+            },
+            {
+                "2020": 13876989.775956148,
+                "2021": 16360671.534438606,
+                "2022": 19448201.024976257,
+                "2023": 19218437.057206184,
+                "product": "FieldSite On-Prem Services"
+            },
+            {
+                "2020": 12233532.379434094,
+                "2021": 10115364.823988268,
+                "2022": 14503107.40902886,
+                "2023": 13182486.29123322,
+                "product": "Helix Maintenance Plans"
+            },
+            {
+                "2020": 30384105.28587226,
+                "2021": 41297016.83377707,
+                "2022": 57360069.46447201,
+                "2023": 38995139.87679954,
+                "product": "OperateX Fulfillment"
+            },
+            {
+                "2020": 5037561.922214865,
+                "2021": 5579417.41215921,
+                "2022": 9373189.793116327,
+                "2023": 4486361.521766473,
+                "product": "DeliverIT Solutions"
+            },
+            {
+                "2020": 16919566.39171467,
+                "2021": 19063973.774449944,
+                "2022": 15491301.85611407,
+                "2023": 13319315.352194766,
+                "product": "Apex ERP Suite"
+            },
+            {
+                "2020": 0,
+                "2021": 0,
+                "2022": 0,
+                "2023": 570575.2985677817,
+                "product": "VoxTelecom"
+            },
+            {
+                "2020": 3525691.9490874563,
+                "2021": 3654516.208253259,
+                "2022": 4528497.993171154,
+                "2023": 4542748.243571376,
+                "product": "StreamMedia Solutions"
+            },
+            {
+                "2020": 7516404.430851912,
+                "2021": 5087514.96625654,
+                "2022": 6069512.059807597,
+                "2023": 11152557.277514499,
+                "product": "Skyline Remote Monitoring"
+            },
+            {
+                "2020": 104665679.08339758,
+                "2021": 124427311.30739553,
+                "2022": 152486636.9239141,
+                "2023": 129601466.84775862,
+                "product": "Total"
+            }
+        ]
+    }
+});
+// ============================================================================
+// MIDDLEWARE
+// ============================================================================
+/**
+ * Error handling middleware for Express
+ */
+const errorHandler = (err, req, res, next) => {
+    console.error('Error:', err.message);
+    res.status(500).json({
+        error: 'Internal Server Error',
+        message: process.env.NODE_ENV === 'development' ? err.message : 'Something went wrong'
+    });
+};
+/**
+ * Request logging middleware
+ */
+const requestLogger = (req, res, next) => {
+    const start = Date.now();
+    res.on('finish', () => {
+        const duration = Date.now() - start;
+        console.log(`${req.method} ${req.path} - ${res.statusCode} - ${duration}ms`);
+    });
+    next();
+};
+// ============================================================================
+// ROUTES
+// ============================================================================
+/**
+ * Health check endpoint
+ */
+const healthCheck = (req, res) => {
+    res.json({
+        status: 'OK',
+        timestamp: new Date().toISOString(),
+        uptime: process.uptime()
+    });
+};
+/**
+ * Data endpoint - returns financial data for the spreadsheet
+ */
+const getData = (req, res) => {
+    try {
+        const data = getFinancialData();
+        res.json(data);
+    }
+    catch (error) {
+        console.error('Error fetching data:', error);
+        res.status(500).json({
+            error: 'Failed to fetch data',
+            message: 'Unable to retrieve financial data'
+        });
+    }
+};
+// ============================================================================
+// APPLICATION SETUP
+// ============================================================================
+const app = (0, express_1.default)();
+// Apply middleware
+app.use((0, cors_1.default)(CORS_OPTIONS));
+app.use(express_1.default.json());
+app.use(requestLogger);
+// Define routes
+app.get('/health', healthCheck);
+app.get('/api/data', getData);
+// Apply error handling middleware last
+app.use(errorHandler);
+// Handle 404 errors
+app.use((req, res) => {
+    res.status(404).json({
+        error: 'Not Found',
+        message: `Route ${req.originalUrl} not found`
+    });
+});
+// ============================================================================
+// SERVER STARTUP
+// ============================================================================
+app.listen(PORT, () => {
+    console.log(`🚀 Backend server running on http://localhost:${PORT}`);
+    console.log(`📊 Data endpoint: http://localhost:${PORT}/api/data`);
+    console.log(`🏥 Health check: http://localhost:${PORT}/health`);
+});
+// Graceful shutdown handling
+process.on('SIGTERM', () => {
+    console.log('SIGTERM received, shutting down gracefully');
+    process.exit(0);
+});
+process.on('SIGINT', () => {
+    console.log('SIGINT received, shutting down gracefully');
+    process.exit(0);
+});
