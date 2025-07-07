@@ -2,7 +2,7 @@
 
 A full-featured spreadsheet application built with React, Next.js, and TypeScript that provides Excel-like functionality with modern web technologies. Optimized for large datasets (1000+ rows) with virtual scrolling.
 
-## 🚀 Quick Start
+## Quick Start
 
 ### Prerequisites
 - Node.js (v18 or higher recommended)
@@ -45,7 +45,7 @@ Go to the frontend URL in your browser (see terminal output, usually http://loca
 
 ---
 
-## 🧪 Running Tests
+## Running Tests
 
 ### Run all frontend tests
 ```bash
@@ -77,7 +77,7 @@ npm run test:coverage
 
 ---
 
-## 🏗️ Build & Production
+## Build & Production
 
 ### Build the frontend for production
 ```bash
@@ -103,14 +103,14 @@ npm start
 
 ---
 
-## ⚡ Tech Stack
+## Tech Stack
 - **Frontend:** Next.js 15+, React 19+, TypeScript, Tailwind CSS
 - **Backend:** Node.js, Express, TypeScript
 - **Testing:** Jest, React Testing Library
 
 ---
 
-## 🛠️ Troubleshooting
+## Troubleshooting
 
 - **Port already in use:**
   - If `npm run dev` says port 3000 is in use, Next.js will use another port (e.g., 3006). Check the terminal for the correct URL.
@@ -126,20 +126,20 @@ npm start
 
 ---
 
-## 📊 Features & Performance
+## Features & Performance
 - Handles 1000+ rows efficiently with virtual scrolling (see performance indicator in the UI)
 - Filtering and sorting are optimized for large datasets
 - Undo/redo, keyboard navigation, formulas, formatting, and more (see below for full feature list)
 
 ---
 
-## 🚀 Live Demo
+## Live Demo
 
 [Deploy link will be added here]
 
-## ✨ Features
+## Features
 
-### Core Features ✅
+### Core Features
 - **Data Display**: Clean tabular data rendering with column headers and row indices
 - **Cell Selection**: Click to select individual cells with visual feedback
 - **Range Selection**: Click and drag to select multiple cells
@@ -147,7 +147,7 @@ npm start
 - **Cell Formatting**: Bold, italic, text alignment, and background color options
 - **Data Persistence**: Changes persist during the session
 
-### Bonus Features ✅
+### Bonus Features
 - **Cell Highlighting**: Custom background colors for visual organization
 - **Formula Support**: Basic formula functionality (SUM, AVERAGE)
 - **Keyboard Navigation**: Arrow keys, Enter, Delete, and shortcuts
@@ -155,14 +155,14 @@ npm start
 - **Sorting & Filtering**: Click headers to sort, filter by text
 - **Undo/Redo**: Full history tracking with Ctrl+Z/Ctrl+Y
 
-### Technical Features ✅
+### Technical Features
 - **Responsive Design**: Works on different screen sizes
 - **Performance Optimized**: Handles 1000+ rows efficiently
 - **API Integration**: Fetches data from backend API
 - **Unit Tests**: Comprehensive test coverage
 - **TypeScript**: Full type safety
 
-## 🎯 Usage Guide
+## Usage Guide
 
 ### Basic Operations
 - **Select Cell**: Click on any cell to select it
@@ -202,7 +202,7 @@ npm start
 - Use the filter input to search across all data
 - Sort indicator (↑/↓) shows current sort direction
 
-## 🏗️ Implementation Approach
+## Implementation Approach
 
 ### Architecture Overview
 I chose a **component-based architecture** with React hooks for state management, focusing on:
@@ -236,7 +236,7 @@ I chose a **component-based architecture** with React hooks for state management
 - **Tailwind CSS**: Enabled rapid UI development with consistent styling
 - **React Testing Library**: User-centric testing approach for reliable tests
 
-## 📊 Assumptions and Design Decisions
+## Assumptions and Design Decisions
 
 ### Data Structure Assumptions
 - **Finite Dataset**: Designed for datasets up to 10,000 rows (performance tested)
@@ -253,7 +253,7 @@ I chose a **component-based architecture** with React hooks for state management
 - **Simple Range Syntax**: Uses A1:B5 notation for cell ranges
 - **No Cell References**: Formulas don't reference other cells dynamically
 
-## 🔮 Future Improvements
+## Future Improvements
 
 Given more time, I would enhance:
 
@@ -281,7 +281,7 @@ Given more time, I would enhance:
 - **PWA Features**: Offline functionality and mobile optimization
 - **Enhanced Testing**: E2E tests with Cypress or Playwright
 
-## 🧪 Testing Strategy
+## Testing Strategy
 
 ### Unit Tests Coverage
 - **Component Rendering**: Verifies correct data display
@@ -295,7 +295,7 @@ Given more time, I would enhance:
 - **Edge Cases**: Handles empty data, invalid input, and boundary conditions
 - **Integration**: Tests component interaction and data flow
 
-## 📈 Performance Considerations
+## Performance Considerations
 
 ### Optimization Strategies
 - **Efficient Re-renders**: Minimized through proper dependency arrays
@@ -307,7 +307,7 @@ Given more time, I would enhance:
 - **Memory Usage**: Optimized data structures to minimize footprint
 - **Event Handling**: Efficient delegation prevents performance bottlenecks
 
-## 🎨 Code Quality
+## Code Quality
 
 ### Standards Followed
 - **TypeScript Best Practices**: Strong typing and interface definitions
@@ -322,34 +322,34 @@ Given more time, I would enhance:
 
 ---
 
-## 🤝 Original Assessment Requirements
+## Original Assessment Requirements
 
 This project successfully implements all core and bonus requirements:
 
-### Core Requirements ✅
-- ✅ Data Display in grid format
-- ✅ Cell Selection with visual feedback
-- ✅ Range Selection with drag functionality
-- ✅ In-cell Editing with double-click
-- ✅ Cell Formatting (bold, italic, alignment)
-- ✅ Data Persistence during session
+### Core Requirements
+- Data Display in grid format
+- Cell Selection with visual feedback
+- Range Selection with drag functionality
+- In-cell Editing with double-click
+- Cell Formatting (bold, italic, alignment)
+- Data Persistence during session
 
-### Bonus Features ✅
-- ✅ Cell Highlighting with background colors
-- ✅ Formula Support (SUM, AVERAGE)
-- ✅ Keyboard Navigation with shortcuts
-- ✅ Column Resizing functionality
-- ✅ Sorting & Filtering capabilities
-- ✅ Undo/Redo functionality
+### Bonus Features
+- Cell Highlighting with background colors
+- Formula Support (SUM, AVERAGE)
+- Keyboard Navigation with shortcuts
+- Column Resizing functionality
+- Sorting & Filtering capabilities
+- Undo/Redo functionality
 
-### Technical Requirements ✅
-- ✅ React with Next.js and TypeScript
-- ✅ Proper state management with hooks
-- ✅ Performance optimized for 1000+ rows
-- ✅ Responsive design
-- ✅ Clean, documented code
-- ✅ Comprehensive unit tests
+### Technical Requirements
+- React with Next.js and TypeScript
+- Proper state management with hooks
+- Performance optimized for 1000+ rows
+- Responsive design
+- Clean, documented code
+- Comprehensive unit tests
 
 ---
 
-**Built with ❤️ using React, Next.js, and TypeScript**
+**Built with React, Next.js, and TypeScript**
