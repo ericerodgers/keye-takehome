@@ -77,6 +77,45 @@ npm run test:coverage
 
 ---
 
+## Deployment
+
+### Production Deployment URLs
+
+The application is deployed using modern cloud platforms for optimal performance and reliability:
+
+- **Frontend:** Deployed on [Vercel](https://vercel.com) with automatic deployments from Git
+- **Backend:** Deployed on [Railway](https://railway.app) with continuous deployment
+
+### Deployment Architecture
+
+```
+┌─────────────────┐    Next.js Proxy    ┌─────────────────┐
+│   Vercel        │ ──────────────────► │   Railway       │
+│   (Frontend)    │                     │   (Backend)     │
+│   Next.js App   │                     │   Express API   │
+└─────────────────┘                     └─────────────────┘
+```
+
+**Benefits of this setup:**
+- ✅ **No CORS Issues:** Frontend proxies API calls through same origin
+- ✅ **Automatic Deployments:** Both platforms deploy on Git push
+- ✅ **Global CDN:** Vercel provides worldwide content delivery
+- ✅ **Scalable Infrastructure:** Both platforms auto-scale as needed
+
+### Environment Configuration
+
+**Frontend (Vercel):**
+- Uses Next.js API rewrites to proxy backend calls
+- No environment variables needed in production
+- Automatic builds on every Git push to main branch
+
+**Backend (Railway):**
+- Automatically detects Node.js and runs build/start scripts
+- Environment variables managed through Railway dashboard
+- CORS configured to allow all origins (can be restricted for security)
+
+---
+
 ## Build & Production
 
 ### Build the frontend for production
@@ -135,7 +174,14 @@ npm start
 
 ## Live Demo
 
-[Deploy link will be added here]
+🚀 **Frontend (Vercel):** https://keye-takehome-775fr5i7s-eric-rodgers-projects.vercel.app  
+🛠️ **Backend API (Railway):** https://keye-spreadsheet-backend-production.up.railway.app
+
+### API Endpoints
+- **Health Check:** https://keye-spreadsheet-backend-production.up.railway.app/health
+- **Spreadsheet Data:** https://keye-spreadsheet-backend-production.up.railway.app/api/data
+
+> **Note:** The frontend uses Next.js API proxying to avoid CORS issues, so all API calls are routed through the same origin.
 
 ## Features
 
