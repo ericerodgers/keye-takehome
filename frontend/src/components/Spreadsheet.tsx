@@ -142,7 +142,8 @@ const Spreadsheet: React.FC<Props> = ({ data, onHeaderChange, onAddColumns, onIn
   
   /** Width of each column in pixels - supports custom column widths */
   const [columnWidths, setColumnWidths] = useState<number[]>(() => {
-    return Array(data.columns.length).fill(150); // Default 150px width
+    // Start with empty array - will be calculated based on container width
+    return [];
   });
   
   /** Height of each row in pixels - supports custom row heights */
@@ -1800,23 +1801,34 @@ const Spreadsheet: React.FC<Props> = ({ data, onHeaderChange, onAddColumns, onIn
     }
   }, [gridData, data.columns, history.length]);
 
-  // Initialize column widths only when starting with fewer columns than data
+  // Initialize column widths to fill container on first load, then preserve existing widths
   useEffect(() => {
-    if (tableRef.current && data.columns.length > 0 && columnWidths.length === 0) {
-      const container = tableRef.current.closest('.overflow-x-auto');
-      if (container) {
-        const containerWidth = container.clientWidth;
-        const rowNumberColumnWidth = 48; // Width of row numbers column
-        const availableWidth = containerWidth - rowNumberColumnWidth;
-        const columnCount = data.columns.length;
-        
-        if (availableWidth > 0 && columnCount > 0) {
-          const baseWidth = Math.max(120, Math.floor(availableWidth / columnCount));
-          setColumnWidths(Array(columnCount).fill(baseWidth));
+    // Case 1: First load - calculate widths to fill container
+    if (data.columns.length > 0 && columnWidths.length === 0) {
+      // Use setTimeout to ensure DOM is ready
+      const timer = setTimeout(() => {
+        if (scrollContainerRef.current) {
+          const containerWidth = scrollContainerRef.current.clientWidth;
+          const rowNumberColumnWidth = 48; // Width of row numbers column
+          const availableWidth = containerWidth - rowNumberColumnWidth;
+          const columnCount = data.columns.length;
+          
+          if (availableWidth > 0 && columnCount > 0) {
+            const baseWidth = Math.max(120, Math.floor(availableWidth / columnCount));
+            setColumnWidths(Array(columnCount).fill(baseWidth));
+          } else {
+            // Fallback if container width can't be determined
+            setColumnWidths(Array(data.columns.length).fill(150));
+          }
+        } else {
+          // Fallback if ref not available
+          setColumnWidths(Array(data.columns.length).fill(150));
         }
-      }
+      }, 0);
+      
+      return () => clearTimeout(timer);
     }
-    // Add default width for any new columns without resizing existing ones
+    // Case 2: Adding new columns - preserve existing widths, add default for new ones
     else if (data.columns.length > columnWidths.length) {
       const newColumnsCount = data.columns.length - columnWidths.length;
       const newWidths = Array(newColumnsCount).fill(150); // Default 150px for new columns
