@@ -55,7 +55,7 @@ type ApiResponse = {
  * to fetch the initial spreadsheet data and handles various data
  * manipulation operations like column reordering, insertion, and renaming.
  */
-const API_URL = process.env.NEXT_PUBLIC_API_URL || 'http://localhost:4000';
+const API_URL = process.env.NEXT_PUBLIC_API_URL || (typeof window !== 'undefined' ? '' : 'http://localhost:4000');
 
 export default function Home() {
   // ============================================================================

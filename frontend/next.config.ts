@@ -6,6 +6,14 @@ const nextConfig = {
   typescript: {
     ignoreBuildErrors: true,
   },
+  async rewrites() {
+    return [
+      {
+        source: '/api/:path*',
+        destination: 'https://keye-spreadsheet-backend-production.up.railway.app/api/:path*',
+      },
+    ];
+  },
 };
 
 module.exports = nextConfig;
