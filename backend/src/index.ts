@@ -177,7 +177,9 @@ const healthCheck = (req: express.Request, res: express.Response) => {
   res.json({
     status: 'OK',
     timestamp: new Date().toISOString(),
-    uptime: process.uptime()
+    uptime: process.uptime(),
+    version: '1.1.0', // Added to verify deployment
+    cors_enabled: true
   });
 };
 

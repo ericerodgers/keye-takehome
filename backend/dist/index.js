@@ -172,7 +172,9 @@ const healthCheck = (req, res) => {
     res.json({
         status: 'OK',
         timestamp: new Date().toISOString(),
-        uptime: process.uptime()
+        uptime: process.uptime(),
+        version: '1.1.0', // Added to verify deployment
+        cors_enabled: true
     });
 };
 /**
