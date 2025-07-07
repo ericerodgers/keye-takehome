@@ -8,11 +8,24 @@ const cors_1 = __importDefault(require("cors"));
 // ============================================================================
 // CONFIGURATION
 // ============================================================================
+/** Server port - defaults to 4000 if not specified in environment */
 const PORT = process.env.PORT || 4000;
+/** CORS configuration for cross-origin requests */
 const CORS_OPTIONS = {
     origin: process.env.NODE_ENV === 'production'
-        ? ['https://yourdomain.com'] // Replace with actual domain in production
-        : ['http://localhost:3000', 'http://127.0.0.1:3000'],
+        ? (origin, callback) => {
+            // Allow any Vercel domain or specific domains
+            if (!origin ||
+                origin.includes('vercel.app') ||
+                origin.includes('localhost') ||
+                origin === 'https://keye-takehome-frontend.vercel.app') {
+                callback(null, true);
+            }
+            else {
+                callback(new Error('Not allowed by CORS'));
+            }
+        }
+        : ['http://localhost:3000', 'http://localhost:3001', 'http://127.0.0.1:3000'],
     credentials: true
 };
 // ============================================================================
@@ -20,7 +33,14 @@ const CORS_OPTIONS = {
 // ============================================================================
 /**
  * Sample financial data for the spreadsheet application
- * Contains product portfolio revenue data across multiple years
+ * Contains product portfolio revenue data across multiple years (2020-2023)
+ *
+ * This data represents a fictional company's product portfolio with:
+ * - 11 different products/services
+ * - Revenue data for 4 years (2020-2023)
+ * - A "Total" row with aggregated revenue
+ *
+ * @returns Object containing columns and items for the spreadsheet
  */
 const getFinancialData = () => ({
     Values: {
@@ -124,6 +144,11 @@ const getFinancialData = () => ({
 // ============================================================================
 /**
  * Error handling middleware for Express
+ * Catches and handles any errors that occur during request processing
+ * @param err - The error object
+ * @param req - Express request object
+ * @param res - Express response object
+ * @param next - Express next function
  */
 const errorHandler = (err, req, res, next) => {
     console.error('Error:', err.message);
@@ -134,6 +159,10 @@ const errorHandler = (err, req, res, next) => {
 };
 /**
  * Request logging middleware
+ * Logs all incoming requests with method, path, status code, and response time
+ * @param req - Express request object
+ * @param res - Express response object
+ * @param next - Express next function
  */
 const requestLogger = (req, res, next) => {
     const start = Date.now();
@@ -148,6 +177,9 @@ const requestLogger = (req, res, next) => {
 // ============================================================================
 /**
  * Health check endpoint
+ * Returns server status and uptime information
+ * @param req - Express request object
+ * @param res - Express response object
  */
 const healthCheck = (req, res) => {
     res.json({
@@ -158,6 +190,9 @@ const healthCheck = (req, res) => {
 };
 /**
  * Data endpoint - returns financial data for the spreadsheet
+ * This is the main endpoint that the frontend calls to get spreadsheet data
+ * @param req - Express request object
+ * @param res - Express response object
  */
 const getData = (req, res) => {
     try {
@@ -175,6 +210,7 @@ const getData = (req, res) => {
 // ============================================================================
 // APPLICATION SETUP
 // ============================================================================
+/** Express application instance */
 const app = (0, express_1.default)();
 // Apply middleware
 app.use((0, cors_1.default)(CORS_OPTIONS));
@@ -189,23 +225,28 @@ app.use(errorHandler);
 app.use((req, res) => {
     res.status(404).json({
         error: 'Not Found',
-        message: `Route ${req.originalUrl} not found`
+        message: `Route ${req.method} ${req.path} not found`
     });
 });
 // ============================================================================
 // SERVER STARTUP
 // ============================================================================
+/**
+ * Start the Express server
+ * Logs the port and handles any startup errors
+ */
 app.listen(PORT, () => {
-    console.log(`🚀 Backend server running on http://localhost:${PORT}`);
-    console.log(`📊 Data endpoint: http://localhost:${PORT}/api/data`);
-    console.log(`🏥 Health check: http://localhost:${PORT}/health`);
+    console.log(`🚀 Server running on port ${PORT}`);
+    console.log(`📊 API available at http://localhost:${PORT}/api/data`);
+    console.log(`🏥 Health check at http://localhost:${PORT}/health`);
 });
-// Graceful shutdown handling
-process.on('SIGTERM', () => {
-    console.log('SIGTERM received, shutting down gracefully');
-    process.exit(0);
+// Handle uncaught exceptions
+process.on('uncaughtException', (err) => {
+    console.error('Uncaught Exception:', err);
+    process.exit(1);
 });
-process.on('SIGINT', () => {
-    console.log('SIGINT received, shutting down gracefully');
-    process.exit(0);
+// Handle unhandled promise rejections
+process.on('unhandledRejection', (reason, promise) => {
+    console.error('Unhandled Rejection at:', promise, 'reason:', reason);
+    process.exit(1);
 });
