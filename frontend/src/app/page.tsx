@@ -55,6 +55,8 @@ type ApiResponse = {
  * to fetch the initial spreadsheet data and handles various data
  * manipulation operations like column reordering, insertion, and renaming.
  */
+const API_URL = process.env.NEXT_PUBLIC_API_URL || 'http://localhost:3001';
+
 export default function Home() {
   // ============================================================================
   // STATE MANAGEMENT
@@ -81,7 +83,7 @@ export default function Home() {
     const fetchData = async () => {
       try {
         setLoading(true);
-        const response = await fetch('http://localhost:4000/api/data');
+        const response = await fetch(API_URL + '/api/data');
         if (!response.ok) {
           throw new Error(`HTTP error! status: ${response.status}`);
         }
@@ -242,11 +244,11 @@ export default function Home() {
   // MAIN RENDER
   // ============================================================================
   
-  return <Spreadsheet 
-    data={data} 
-    onHeaderChange={handleHeaderChange} 
-    onAddColumns={handleAddColumns} 
-    onInsertColumn={handleInsertColumn} 
-    onReorderColumns={handleReorderColumns} 
-  />;
+  return     <Spreadsheet 
+      data={data} 
+      onHeaderChange={handleHeaderChange} 
+      onAddColumns={handleAddColumns} 
+      onInsertColumn={handleInsertColumn} 
+      onReorderColumns={handleReorderColumns} 
+    />;
 }
