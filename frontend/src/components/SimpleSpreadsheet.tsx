@@ -511,7 +511,7 @@ export default function SimpleSpreadsheet() {
           break;
       }
     }
-  }, [selection, editingCell, data]);
+  }, [selection, editingCell, data, toggleBold, toggleItalic]);
 
   // Focus edit input when editing starts
   useEffect(() => {
@@ -532,7 +532,7 @@ export default function SimpleSpreadsheet() {
 
     document.addEventListener('mousedown', handleClickOutside);
     return () => document.removeEventListener('mousedown', handleClickOutside);
-  }, [editingCell]);
+  }, [editingCell, handleEditComplete]);
 
   return (
     <div className="min-h-screen bg-gray-100 p-4">

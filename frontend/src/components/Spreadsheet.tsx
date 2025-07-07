@@ -283,9 +283,6 @@ const Spreadsheet: React.FC<Props> = ({ data, onHeaderChange, onAddColumns, onIn
   /** Reference to the main table element */
   const tableRef = useRef<HTMLTableElement>(null);
   
-  /** Legacy container ref (may be unused) */
-  const containerRef = useRef<HTMLDivElement>(null);
-  
   /** Reference to the main scrollable container for virtual scrolling */
   const scrollContainerRef = useRef<HTMLDivElement>(null);
 
@@ -383,7 +380,7 @@ const Spreadsheet: React.FC<Props> = ({ data, onHeaderChange, onAddColumns, onIn
    * Determines which rows are currently visible and calculates positioning
    * Only renders rows that are actually visible plus buffer rows for smooth scrolling
    */
-  const { visibleRows, totalHeight, offsetY, startIndex, endIndex } = useMemo(() => {
+  const { visibleRows, offsetY, startIndex, endIndex } = useMemo(() => {
     const totalRows = filteredData.length;
     
     // Calculate how many rows can fit in the viewport plus buffer
