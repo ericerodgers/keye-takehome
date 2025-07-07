@@ -602,7 +602,7 @@ const Spreadsheet: React.FC<Props> = ({ data, onHeaderChange, onAddColumns, onIn
       // Handle basic arithmetic expressions (e.g., A1+B2, A1*B2/C3)
       if (!upperFormula.includes('(') && /^[A-Z0-9+\-*/.\s]+$/.test(upperFormula)) {
         // Replace cell references with their values
-        let expression = upperFormula.replace(/([A-Z]+\d+)/g, (match) => {
+        const expression = upperFormula.replace(/([A-Z]+\d+)/g, (match) => {
           const value = getCellValue(match);
           return typeof value === 'number' ? value.toString() : '0';
         });
@@ -705,7 +705,7 @@ const Spreadsheet: React.FC<Props> = ({ data, onHeaderChange, onAddColumns, onIn
       
       return '#ERROR!';
     } catch (error) {
-      return '#ERROR!';
+      return `ERROR! ${error}`;
     }
   }, [getCellsInRange, getCellValue]);
 
@@ -1039,7 +1039,7 @@ const Spreadsheet: React.FC<Props> = ({ data, onHeaderChange, onAddColumns, onIn
     saveToHistory();
   };
 
-  const handleColumnDragEnd = (e: React.DragEvent) => {
+  const handleColumnDragEnd = () => {
     setDraggedColumn(null);
     setDragOverColumn(null);
   };
