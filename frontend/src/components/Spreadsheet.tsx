@@ -2281,10 +2281,10 @@ const Spreadsheet: React.FC<Props> = ({ data, onHeaderChange, onAddColumns, onIn
       </div>
         
       {/* Data Table */}
-      <div className="flex-1 bg-white mx-2 sm:mx-4 lg:mx-8 my-2 sm:my-4 lg:my-6 rounded-lg shadow-lg border-2 border-gray-400">
+      <div className="flex-1 bg-white mx-2 sm:mx-4 lg:mx-8 my-2 sm:my-4 lg:my-6 rounded-lg shadow-lg border-2 border-gray-400 flex flex-col overflow-hidden">
         <div 
           ref={scrollContainerRef}
-          className="overflow-x-auto overflow-y-auto max-h-[80vh]"
+          className="flex-1 overflow-x-auto overflow-y-auto"
           onScroll={handleScroll}
         >
           <table 
